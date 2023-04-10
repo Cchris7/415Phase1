@@ -21,6 +21,20 @@ app.get('/rest/list/', (req,res) => {
 );
 });
 
+app.get('rest/ticket/:id', (req,res) => {
+
+    const tickets = JSON.parse(fs.readFileSync(mydata.json));
+    const ticketId = parseInt(req.params.id);
+    const theTicket = tickets.find(ticket => ticket.id === ticketId);
+
+    if (theTicket) {
+        res.json(theTicket);
+    }
+    else{
+        res.status(404).send('ticket not found');
+    }
+});
+
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`);

@@ -22,9 +22,15 @@ app.get('/rest/list/', (req,res) => {
 );
 });
 
-app.get('rest/ticket/:id', function(req,res)  {
-    const key = "{ id: '" + req.params.id + "'}";
-    console.log("looking for : " + key);
+app.get('/rest/ticket/:id', (req,res) => {
+    const id = req.params.id;
+    const search = mydata.find(obj => obj.id === parseInt(id));
+
+    if (!search) {
+        res.status(404).send('Object not found');
+        return;
+    }
+    res.json(search);
 });
 
 

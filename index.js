@@ -34,10 +34,10 @@ app.get('/rest/ticket/:id', (req,res) => {
 });
 
 app.post('/rest/ticket' , (req, res) => {
-    const data = JSON.parse(fs.readFileSync('./tickets.json'));
+    const data = JSON.parse(fs.readFileSync('./mydata.json'));
     
     const newTicket = {
-        id: req.body.id,
+    id: req.body.id,
     created_at: req.body.created_at,
     updated_at: req.body.updated_at,
     type: req.body.type,
@@ -54,7 +54,7 @@ app.post('/rest/ticket' , (req, res) => {
       
   data.push(newTicket);
   fs.writeFileSync('./mydata.json', JSON.stringify(data));
-  res,json(newTicket);
+  res.json(newTicket);
 });
 
 app.listen(port, () => {

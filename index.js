@@ -71,32 +71,31 @@ app.post('/rest/ticket' , (req, res) => {
   res.json(newTicket);
 });
 
-app.delete('/rest/ticket/:id', (req, res) => {
-    const id = req.params.id;
+app.delete('/tickets/:id', (req, res) => {
+    const { id } = req.params;
   
-    fs.readFile('mydata.json', 'utf8', (error, data) => {
-      if (error) {
-        console.error(error);
-        return res.status(500).send();
+    fs.readFile('mydata.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Internal Server Error');
       }
   
-      let tickets = JSON.parse(data);
-  
-      const index = tickets.findIndex(ticket => ticket.id === id);
+      let tickets = JSON.parse(data).tickets;
+      const index = tickets.findIndex((ticket) => ticket.id === id);
   
       if (index === -1) {
-        return res.status(404).send();
+        return res.status(404).send('Ticket not found');
       }
   
       tickets.splice(index, 1);
   
-      fs.writeFile('mydata.json', JSON.stringify(tickets), 'utf8', error => {
-        if (error) {
-          console.error(error);
-          return res.status(500).send();
+      fs.writeFile('mydata.json', JSON.stringify({ tickets }), (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send('Internal Server Error');
         }
   
-        res.status(204).send();
+        res.status(200).send('Ticket deleted successfully');
       });
     });
   });

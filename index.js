@@ -3,9 +3,23 @@ const mydata = require('./mydata');
 const app = express();
 const port = 3000;
 const fs = require('fs');
+const { default: mongoose } = require('mongoose');
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true}))
+
+const uri = 'mongodb+srv://calchristensen:q6Df1kI93FlE2TAf@cluster0.uip5c03.mongodb.net/?retryWrites=true&w=majority'
+
+async function connect() {
+    try{
+        await mongoose.connect(uri);
+        console.log("connected to MongoDB");
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+connect();
 
 app.get('/rest/list/', (req,res) => {
     fs.readFile('mydata.json', 'utf8', (err, data) => {
@@ -56,6 +70,37 @@ app.post('/rest/ticket' , (req, res) => {
   fs.writeFileSync('./mydata.json', JSON.stringify(data));
   res.json(newTicket);
 });
+
+app.delete('/rest/ticket/:id', (req, res) => {
+    const id = req.params.id;
+  
+    fs.readFile('mydata.json', 'utf8', (error, data) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).send();
+      }
+  
+      let tickets = JSON.parse(data);
+  
+      const index = tickets.findIndex(ticket => ticket.id === id);
+  
+      if (index === -1) {
+        return res.status(404).send();
+      }
+  
+      tickets.splice(index, 1);
+  
+      fs.writeFile('mydata.json', JSON.stringify(tickets), 'utf8', error => {
+        if (error) {
+          console.error(error);
+          return res.status(500).send();
+        }
+  
+        res.status(204).send();
+      });
+    });
+  });
+  
 
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);

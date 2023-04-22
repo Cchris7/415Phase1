@@ -118,8 +118,6 @@ app.delete('/rest/ticket/:id', (req, res) => {
         return res.status(404).send('Ticket not found');
       }
   
-      tickets[index] = { ...tickets[index], ...updatedData };
-  
       fs.writeFile('mydata.json', JSON.stringify(tickets), (err) => {
         if (err) {
           console.error(err);
@@ -130,8 +128,6 @@ app.delete('/rest/ticket/:id', (req, res) => {
       });
     });
   });
-
-
 
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);

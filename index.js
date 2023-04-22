@@ -105,6 +105,40 @@ app.delete('/rest/ticket/:id', (req, res) => {
     res.status(200).send('Ticket with ID ${ticketId} deleted successfully');
   });
   
+  app.put('/rest/ticket/:id', (req, res) => {
+    const ticketId = req.params.id;
+    const updatedData = req.body;
+  
+    // Read the existing data from the JSON file
+    fs.readFile('mydata.json', 'utf8', (err, data) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Internal Server Error');
+      }
+  
+      let tickets = JSON.parse(data);
+      const index = tickets.findIndex((ticket) => ticket.id === ticketId);
+  
+      if (index === -1) {
+        return res.status(404).send('Ticket not found');
+      }
+  
+      // Update the ticket with the new data
+      tickets[index] = { ...tickets[index], ...updatedData };
+  
+      // Write the updated data back to the JSON file
+      fs.writeFile('mydata.json', JSON.stringify(tickets), (err) => {
+        if (err) {
+          console.error(err);
+          return res.status(500).send('Internal Server Error');
+        }
+  
+        res.status(200).send('Ticket with ID ${ticketId} updated successfully');
+      });
+    });
+  });
+
+
 
 app.listen(port, () => {
   console.log(`Listening at http://localhost:${port}`);

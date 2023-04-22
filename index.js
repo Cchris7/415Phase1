@@ -76,26 +76,22 @@ app.delete('/rest/ticket/:id', (req, res) => {
     let tickets;
   
     try {
-      // Read the data from the JSON file
       const data = fs.readFileSync('mydata.json');
       tickets = JSON.parse(data.toString());
     } catch (err) {
       console.error(err);
-      return res.status(500).send('Internal Server Error');
+      return res.status(500).send('Server Error');
     }
   
-    // Find the index of the ticket with the matching ID
     const index = tickets.findIndex((ticket) => ticket.id === ticketId);
   
     if (index === -1) {
       return res.status(404).send('Ticket not found');
     }
   
-    // Remove the ticket from the array
     tickets.splice(index, 1);
   
     try {
-      // Write the updated data back to the JSON file
       fs.writeFileSync('mydata.json', JSON.stringify(tickets));
     } catch (err) {
       console.error(err);
@@ -109,7 +105,6 @@ app.delete('/rest/ticket/:id', (req, res) => {
     const ticketId = req.params.id;
     const updatedData = req.body;
   
-    // Read the existing data from the JSON file
     fs.readFile('mydata.json', 'utf8', (err, data) => {
       if (err) {
         console.error(err);
@@ -123,17 +118,15 @@ app.delete('/rest/ticket/:id', (req, res) => {
         return res.status(404).send('Ticket not found');
       }
   
-      // Update the ticket with the new data
       tickets[index] = { ...tickets[index], ...updatedData };
   
-      // Write the updated data back to the JSON file
       fs.writeFile('mydata.json', JSON.stringify(tickets), (err) => {
         if (err) {
           console.error(err);
           return res.status(500).send('Internal Server Error');
         }
   
-        res.status(200).send('Ticket with ID ${ticketId} updated successfully');
+        res.status(200).send('Ticket with ID ${ticketId} has been updated');
       });
     });
   });

@@ -71,7 +71,7 @@ app.post('/rest/ticket' , (req, res) => {
   res.json(newTicket);
 });
 
-app.delete('/tickets/:id', (req, res) => {
+app.delete('/rest/ticket/:id', (req, res) => {
     const { id } = req.params;
   
     fs.readFile('mydata.json', 'utf8', (err, data) => {

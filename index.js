@@ -104,7 +104,7 @@ app.get("/rest/ticket/:ticketId", function(req, res) {
     run().catch(console.dir);
 });
 
-app.get("/rest/ticket/:ticketId", function(req, res) {
+app.get("/rest/xml/ticket/:ticketId", function(req, res) {
     const client = new MongoClient(uri);
     const searchKey = "ticketID: '" + req.params.ticketId + "'";
     console.log("Looking for: " + searchKey);
